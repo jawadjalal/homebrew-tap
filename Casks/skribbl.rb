@@ -1,6 +1,6 @@
 cask "skribbl" do
   version "0.0.1"
-  sha256 "8ffe3ab069887b4fcc4b2264fbcda21a85ad1af16729a0aeb446b83bfee9d4ba"
+  sha256 "43c43bb06eb1d9274392655926730e1f660f8ce060690dda9daabacb3fe7d85b"
 
   url "https://github.com/jawadjalal/canvascode/releases/download/v#{version}/Skribbl-#{version}-arm64.dmg",
       verified: "github.com/jawadjalal/canvascode/"
