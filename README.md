@@ -6,18 +6,28 @@ agents.
 ## Install
 
 ```sh
-brew install --cask --no-quarantine jawadjalal/tap/skribbl
+brew tap jawadjalal/tap && brew trust jawadjalal/tap && brew install --cask skribbl
 ```
 
-`--no-quarantine` is needed because Skribbl is not yet notarized by Apple. Homebrew quarantines
-downloads by default, and Gatekeeper refuses to open a quarantined app that is not signed with a
-Developer ID certificate. The flag skips that step for this install only.
-
-If you leave the flag off and macOS says the app is damaged, clear the flag once:
+Then, once:
 
 ```sh
 xattr -dr com.apple.quarantine /Applications/Skribbl.app
 ```
+
+**Three steps, not one, and all three are Homebrew 6 changes.** If you have seen a shorter
+version of this line anywhere, it was written for Homebrew 5 and it will not work:
+
+- `brew install jawadjalal/tap/skribbl` **no longer auto-taps.** It fails with "This command
+  requires the tap jawadjalal/tap".
+- `brew trust` is new. Homebrew 6 refuses to load a cask from a third-party tap until you say
+  you trust it: "Refusing to load cask ... from untrusted tap".
+- `--no-quarantine` **was removed.** It now fails outright with `Error: invalid option`.
+
+That last one is why the `xattr` line is no longer optional. Skribbl is ad-hoc signed rather
+than notarized, Homebrew always quarantines what it downloads, and there is no flag left to opt
+out - so Gatekeeper will call the app damaged until you clear the flag yourself. Signing and
+notarizing removes this step entirely, and it is the reason to eventually pay Apple.
 
 ## Update
 
