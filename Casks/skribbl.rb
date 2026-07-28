@@ -1,16 +1,21 @@
 cask "skribbl" do
   version "0.0.1"
-  sha256 "43c43bb06eb1d9274392655926730e1f660f8ce060690dda9daabacb3fe7d85b"
+  sha256 "ac26adc2e2b49e5b3ebb1d681594f3bbedb97be2e0644a83768facb27f0acced"
 
-  url "https://github.com/jawadjalal/canvascode/releases/download/v#{version}/Skribbl-#{version}-arm64.dmg",
-      verified: "github.com/jawadjalal/canvascode/"
+  # Self-hosted. The source repo is private, so a GitHub release asset could never be
+  # fetched by a cask - Homebrew cannot authenticate, and that URL 404'd for everyone.
+  # No `verified:` line: the download host matches `homepage`, so Homebrew does not need one.
+  url "https://skribbl.dev/downloads/Skribbl-#{version}-arm64.dmg"
   name "Skribbl"
   desc "Infinite canvas of real terminals and coding agents"
-  homepage "https://skribbl.app/"
+  homepage "https://skribbl.dev/"
 
+  # The app's own update feed doubles as the version source. `:github_latest` watched a
+  # releases page that does not exist and never will.
   livecheck do
-    url :url
-    strategy :github_latest
+    url "https://skribbl.dev/downloads/latest-mac.yml"
+    strategy :page_match
+    regex(/^version:\s*(\d+(?:\.\d+)+)/i)
   end
 
   # Apple Silicon only: package.json builds a single arm64 dmg. Add an x64 target and a second

@@ -1,6 +1,6 @@
 # jawadjalal/tap
 
-Homebrew tap for [Skribbl](https://skribbl.app): an infinite canvas of real terminals and coding
+Homebrew tap for [Skribbl](https://skribbl.dev): an infinite canvas of real terminals and coding
 agents.
 
 ## Install
@@ -44,19 +44,29 @@ Apple Silicon, macOS 10.15 or later. There is no Intel build.
 
 ## Releasing a new version
 
-The cask points at a GitHub release asset on
-[jawadjalal/canvascode](https://github.com/jawadjalal/canvascode), so publish the release first,
-then update this tap:
+The cask points at `skribbl.dev/downloads/`, which the app repo is private is exactly why: a
+cask cannot authenticate against a private GitHub release, so the artifacts are self-hosted.
 
 1. Bump `version` in the app's `package.json`.
-2. `npm run release` to build and upload the dmg to a GitHub release tagged `v<version>`.
-3. Get the checksum of the published dmg:
+2. `npm run dist` on an arm64 Mac. This produces FOUR artifacts in `release/`, and all four
+   have to be uploaded - the dmg is what a human downloads, but the **zip** is what the
+   in-app updater applies, and `latest-mac.yml` is the feed it reads:
+
+   ```
+   Skribbl-<version>-arm64.dmg          Skribbl-<version>-arm64-mac.zip
+   Skribbl-<version>-arm64.dmg.blockmap Skribbl-<version>-arm64-mac.zip.blockmap
+   latest-mac.yml
+   ```
+
+3. Upload all five to Vercel Blob under `downloads/`, with no random suffix so the URL stays
+   a pure function of the filename.
+4. Get the checksum of the dmg:
 
    ```sh
    shasum -a 256 release/Skribbl-<version>-arm64.dmg
    ```
 
-4. Update `version` and `sha256` in `Casks/skribbl.rb`, then commit and push.
+5. Update `version` and `sha256` in `Casks/skribbl.rb`, then commit and push.
 
 Check the result before announcing it:
 
