@@ -21,14 +21,16 @@ cask "skribbl" do
   # Apple Silicon only: package.json builds a single arm64 dmg. Add an x64 target and a second
   # `sha256`/`url` pair keyed on `Hardware::CPU.intel?` if that ever changes.
   depends_on arch: :arm64
-  # Electron 33.
-  depends_on macos: ">= :catalina"
+  # Electron 33. `:catalina` already means "or newer"; the ">= :catalina" string
+  # form is deprecated in Homebrew 6 and prints a warning on every install.
+  depends_on macos: :catalina
 
   app "Skribbl.app"
 
   # Skribbl is ad-hoc signed rather than Developer ID signed and notarized, so Gatekeeper will
-  # refuse a quarantined copy. Homebrew quarantines downloads by default, so install with
-  # `--no-quarantine` (see the tap README). This stanza cannot opt out on the user's behalf.
+  # refuse a quarantined copy. Homebrew 6 REMOVED `--no-quarantine` (`Error: invalid option`),
+  # and a cask cannot opt out on the user's behalf, so clearing the flag afterwards is now the
+  # only route. The caveats below say so; do not reinstate the old flag in any instructions.
 
   zap trash: [
     # Canvas, scrollback snapshots, link sidecars, hook endpoint and status mirror.
@@ -42,9 +44,14 @@ cask "skribbl" do
     Skribbl runs shells and coding agents inside your project folders, so macOS will ask for
     access to Documents, Desktop or Downloads the first time you open a project there.
 
-    This build is not notarized. If you installed without `--no-quarantine` and macOS says the
-    app is damaged, clear the quarantine flag once:
+    This build is not notarized, and Homebrew always quarantines what it downloads, so macOS
+    will call it damaged until you clear the flag. Run this once, now:
 
       xattr -dr com.apple.quarantine /Applications/Skribbl.app
+
+    (`--no-quarantine` no longer exists: Homebrew 6 removed it.)
+
+    Updates are `brew upgrade --cask skribbl`. Homebrew never upgrades on its own, so Skribbl
+    tells you when a version is out and hands you that command.
   EOS
 end
