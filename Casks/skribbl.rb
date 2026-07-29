@@ -1,6 +1,6 @@
 cask "skribbl" do
-  version "0.0.5"
-  sha256 "578fafd35d77b87c4040a9db9fee184f4b311e1ebe6fff668dc8c7095ea527f4"
+  version "0.0.6"
+  sha256 "a78a9b7cb8c202025e79ceb1c0c63b426e74da8ab6efbb0230224a2b4faa1436"
 
   # Self-hosted. The source repo is private, so a GitHub release asset could never be
   # fetched by a cask - Homebrew cannot authenticate, and that URL 404'd for everyone.
